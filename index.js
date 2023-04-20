@@ -4,6 +4,22 @@ exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = r
 exports.createHash = exports.Hash = require('create-hash')
 exports.createHmac = exports.Hmac = require('create-hmac')
 
+exports.getRandomValues = function (abv) {
+  var l = abv.length
+  while (l--) {
+    var bytes = exports.randomBytes(7)
+    var randomFloat = (bytes[0] % 32) / 32
+
+    for (var i = 0; i < bytes.length; i++) {
+      var byte = bytes[i]
+      randomFloat = (randomFloat + byte) / 256
+    }
+
+    abv[l] = Math.floor(randomFloat * 256)
+  }
+  return abv
+}
+
 var algos = require('browserify-sign/algos')
 var algoKeys = Object.keys(algos)
 var hashes = ['sha1', 'sha224', 'sha256', 'sha384', 'sha512', 'md5', 'rmd160'].concat(algoKeys)
